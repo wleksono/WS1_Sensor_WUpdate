@@ -32,12 +32,13 @@ if($SearchResult.count -ne 0){
         }
     }
     $OutputResult=""
-    if($FailedUpdates.kb){
+    if($FailedUpdates.count -ne 0){
         foreach ($list in $FailedUpdates){
             $OutputResult += $list.kb + " "
         }
+        return $OutputResult
     }
-    return $OutputResult
+    return "No Failed Applicable Updates"
 }
 else{
     return "No Missing Updates"
