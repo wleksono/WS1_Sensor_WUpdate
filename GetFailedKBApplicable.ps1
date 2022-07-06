@@ -21,10 +21,14 @@ if($SearchResult.count -ne 0){
         else{
             Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ($Matches[0])
         }
+        $cond=$false
         foreach ($record in $UpdateHistory){
             if($entry.Identity.updateID -eq $record.UpdateIdentity.updateID -and $record.ResultCode -eq 4){
-                $FailedUpdates += $entry
+                $cond = $true
             }
+        }
+        if($cond){
+            $FailedUpdates += $entry
         }
     }
     $OutputResult=""
