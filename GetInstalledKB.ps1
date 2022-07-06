@@ -1,11 +1,13 @@
-﻿$Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
+$Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
 $UpdateSearcher = $Session.CreateUpdateSearcher()
 $TotalHistoryCount = $UpdateSearcher.GetTotalHistoryCount()
 $UpdateHistory = $UpdateSearcher.QueryHistory(0,$TotalHistoryCount)
+$HistoryDays = -90
 
 $InstalledUpdates = @()
 
 foreach ($entry in $UpdateHistory){
+if($entry.Date -gt (Get-Date).AddDays($HistoryDays)) {
     $Matches = $null
     $entry.Title -match "KB(\d+)" | Out-Null
     if ($Matches -eq $null){
@@ -23,12 +25,13 @@ foreach ($entry in $UpdateHistory){
         }
     }
 }
+}
 
 #Get Windows Updates from WMI
-$WMIKBs = Get-WmiObject win32_quickfixengineering |  Select-Object HotFixID -ExpandProperty HotFixID
+$WMIKBs = Get-WmiObject win32_quickfixengineering | ?{($_.InstalledOn -gt (Get-Date).AddDays($HistoryDays)) } | Select-Object HotFixID -ExpandProperty HotFixID
 
 #Get Windows Updates from DISM
-$DISMKBList = dism /online /get-packages | findstr KB 
+$DISMKBList = Get-WindowsPackage -online | ?{$_.InstallTime -gt (Get-Date).AddDays($HistoryDays)} | findstr KB 
   
 $pattern = '(?<=KB).+?(?=~)'
 if($DISMKBList){
