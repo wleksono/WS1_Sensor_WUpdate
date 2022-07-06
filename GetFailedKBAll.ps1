@@ -32,12 +32,12 @@ foreach ($entry in $UpdateHistory){
 $OutputUpdates = ($FailedUpdates.kb) | Sort-Object -Unique
 $OutputResult = ""
 
-if ($OutputUpdates){
+if ($OutputUpdates.count -ne 0){
     foreach ($list in $OutputUpdates){
         $OutputResult += $list + " "
     }
     return $OutputResult
 }
 else{
-    return "No Updates Installed"
+    return "No Failed Updates"
 }
