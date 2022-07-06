@@ -47,7 +47,7 @@ $OutputUpdates = ($InstalledUpdates.kb + $WMIKBs + $DISMKBNumbers) | Sort-Object
 
 $OutputResult = ""
 
-if ($OutputUpdates){
+if ($OutputUpdates.count -ne 0){
     foreach ($list in $OutputUpdates){
         $OutputResult += $list + " "
     }
