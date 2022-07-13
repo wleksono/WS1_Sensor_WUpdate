@@ -7,16 +7,15 @@ $HistoryDays = -90
 $InstalledUpdates = @()
 
 foreach ($entry in $UpdateHistory){
-if($entry.Date -gt (Get-Date).AddDays($HistoryDays)) {
-    $Matches = $null
-    $entry.Title -match "KB(\d+)" | Out-Null
-    if ($Matches -eq $null){
-        Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ""
-    }
-    else{
-        Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ($Matches[0])
-    }
-    if ($entry.KB){
+    if($entry.Date -gt (Get-Date).AddDays($HistoryDays)) {
+        $Matches = $null
+        $entry.Title -match "KB(\d+)" | Out-Null
+        if ($Matches -eq $null){
+            Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value "KBNoID"
+        }
+        else{
+            Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ($Matches[0])
+        }
         if ($entry.ResultCode -eq 2){
             $InstalledUpdates += $entry
         }
@@ -24,7 +23,6 @@ if($entry.Date -gt (Get-Date).AddDays($HistoryDays)) {
             $InstalledUpdates += $entry
         }
     }
-}
 }
 
 #Get Windows Updates from WMI
