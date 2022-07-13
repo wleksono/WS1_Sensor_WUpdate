@@ -14,14 +14,12 @@ if($SearchResult.count -ne 0){
         $Matches = $null
         $entry.Title -match "KB(\d+)" | Out-Null
         if ($Matches -eq $null){
-            Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ""
+            Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value "KBNoID"
         }
         else{
             Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ($Matches[0])
         }
-        if($entry.kb){
-            $MissingUpdates += $entry
-        }
+        $MissingUpdates += $entry
     }
     $OutputResult=""
     foreach ($list in $MissingUpdates){
