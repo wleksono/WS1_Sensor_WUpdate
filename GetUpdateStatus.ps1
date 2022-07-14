@@ -17,14 +17,6 @@ $FailedUpdates = @()
 
 if($SearchResult.count -ne 0){
     foreach ($entry in $SearchResult){
-        $Matches = $null
-        $entry.Title -match "KB(\d+)" | Out-Null
-        if ($Matches -eq $null){
-            Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ""
-        }
-        else{
-            Add-Member -InputObject $entry -MemberType NoteProperty -Name KB -Value ($Matches[0])
-        }
         $cond=$false
         foreach ($record in $UpdateHistory){
             if($entry.Identity.updateID -eq $record.UpdateIdentity.updateID -and $record.ResultCode -eq 4){
