@@ -1,4 +1,4 @@
-﻿$Sysinfo = New-Object -ComObject Microsoft.Update.SystemInfo
+$Sysinfo = New-Object -ComObject Microsoft.Update.SystemInfo
 $pending = $Sysinfo.RebootRequired
 if ($pending){return "Pending Reboot"}
 
