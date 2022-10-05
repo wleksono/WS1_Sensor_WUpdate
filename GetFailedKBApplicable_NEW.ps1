@@ -26,8 +26,14 @@ if($SearchResult.count -ne 0){
             $FailedUpdates += "KB" + $entry.KBArticleIDs
         }
     }
+    
+    $OutputResult = ""
+    
     if($FailedUpdates.count -ne 0){
-        return $FailedUpdates
+        foreach ($list in $FailedUpdates){
+            $OutputResult += $list + " "
+        }
+        return $OutputResult
     }
     return "No Failed Applicable Updates"
 }
