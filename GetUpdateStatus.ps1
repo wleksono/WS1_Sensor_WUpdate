@@ -1,7 +1,4 @@
-﻿$testnet = Test-NetConnection -ComputerName www.catalog.update.microsoft.com -CommonTCPPort HTTP
-if($testnet.TcpTestSucceeded -eq "True"){}Else{return "No Connection"}
-
-$Sysinfo = New-Object -ComObject Microsoft.Update.SystemInfo
+﻿$Sysinfo = New-Object -ComObject Microsoft.Update.SystemInfo
 $pending = $Sysinfo.RebootRequired
 if ($pending){return "Pending Reboot"}
 
@@ -11,7 +8,13 @@ $TotalHistoryCount = $UpdateSearcher.GetTotalHistoryCount()
 $UpdateHistory = $UpdateSearcher.QueryHistory(0,$TotalHistoryCount)
 
 $Criteria = "IsHidden=0 and IsInstalled=0 and IsAssigned=1"
-$SearchResult = $UpdateSearcher.Search($Criteria).Updates
+
+try{
+    $SearchResult = $UpdateSearcher.Search($Criteria).Updates
+}
+catch{
+    return "Update Search Failed"
+}
 
 $FailedUpdates = @()
 
