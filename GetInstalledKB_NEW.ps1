@@ -1,12 +1,14 @@
-$testnet = Test-NetConnection -ComputerName www.catalog.update.microsoft.com -CommonTCPPort HTTP
-if($testnet.TcpTestSucceeded -eq "True"){}Else{return "No Connection"}
-
-
 $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
 $UpdateSearcher = $Session.CreateUpdateSearcher()
 
 $Criteria = "IsHidden=0 and IsInstalled=1"
-$SearchResult = $UpdateSearcher.Search($Criteria).Updates
+
+try{
+    $SearchResult = $UpdateSearcher.Search($Criteria).Updates
+}
+catch{
+    return "Update Search Failed"
+}
 
 $HistoryDays = -28
 
