@@ -25,6 +25,7 @@ $CheckUpdates = {
         
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
+    $updateSearcher.ServerSelection = "1"
     $TotalHistoryCount = $UpdateSearcher.GetTotalHistoryCount()
     $UpdateHistory = $UpdateSearcher.QueryHistory(0,$TotalHistoryCount)
         
