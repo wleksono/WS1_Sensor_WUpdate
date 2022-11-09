@@ -43,6 +43,7 @@ $CheckUpdates = {
         }catch{
             Log "Error" "$($_.Exception)"
             $trigger = $false
+            if ($a -ge $retrycount) {return "Update Search Failed"}
         }
     }Until ($a -ge $retrycount -or $trigger)
     
