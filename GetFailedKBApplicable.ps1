@@ -19,6 +19,9 @@ $FailedUpdates = {
         Add-content $Logfile -value $logEntry
     }
 
+    $testnet = Test-NetConnection -ComputerName www.catalog.update.microsoft.com -CommonTCPPort HTTP
+    if($testnet.TcpTestSucceeded -eq "True"){}Else{return "No Connection"}
+
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
     $TotalHistoryCount = $UpdateSearcher.GetTotalHistoryCount()
@@ -26,13 +29,19 @@ $FailedUpdates = {
 
     $Criteria = "IsHidden=0 and IsInstalled=0 and IsAssigned=1"
 
-    try{
-        $SearchResult = $UpdateSearcher.Search($Criteria).Updates
-    }
-    catch{
-        Log "Error" "$($_.Exception)"
-        return "Update Search Failed"
-    }
+    $retrycount = 3
+    $a = 0
+    do{
+        $a++
+        $trigger = $true
+        try{
+            $SearchResult = $UpdateSearcher.Search($Criteria).Updates
+        }catch{
+            Log "Error" "$($_.Exception)"
+            $trigger = $false
+            if ($a -ge $retrycount) {return "Update Search Failed"}
+        }
+    }Until ($a -ge $retrycount -or $trigger)
 
     $FailedUpdates = @()
 
