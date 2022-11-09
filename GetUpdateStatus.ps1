@@ -22,6 +22,9 @@ $CheckUpdates = {
     $Sysinfo = New-Object -ComObject Microsoft.Update.SystemInfo
     $pending = $Sysinfo.RebootRequired
     if ($pending){return "Pending Reboot"}
+    
+    $testnet = Test-NetConnection -ComputerName www.catalog.update.microsoft.com -CommonTCPPort HTTP
+    if($testnet.TcpTestSucceeded -eq "True"){}Else{return "No Connection"}
         
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
@@ -30,13 +33,19 @@ $CheckUpdates = {
         
     $Criteria = "IsHidden=0 and IsInstalled=0 and IsAssigned=1"
     
-    try{
-        $SearchResult = $UpdateSearcher.Search($Criteria).Updates
-    }catch{
-        Log "Error" "$($_.Exception)"
-        return "Update Search Failed"
-    }
-
+    $retrycount = 3
+    $a = 0
+    do{
+        $a++
+        $trigger = $true
+        try{
+            $SearchResult = $UpdateSearcher.Search($Criteria).Updates
+        }catch{
+            Log "Error" "$($_.Exception)"
+            $trigger = $false
+        }
+    }Until ($a -ge $retrycount -or $trigger)
+    
     $FailedUpdates = @()
         
     if($SearchResult.count -ne 0){
