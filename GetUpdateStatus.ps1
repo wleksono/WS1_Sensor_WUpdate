@@ -1,4 +1,4 @@
-﻿$timeout = 120 ## seconds
+﻿$timeout = 105 ## seconds
 
 #script block for background job
 $CheckUpdates = {
