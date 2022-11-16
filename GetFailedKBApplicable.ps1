@@ -25,6 +25,7 @@ $FailedUpdates = {
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
     $TotalHistoryCount = $UpdateSearcher.GetTotalHistoryCount()
+    if($TotalHistoryCount -eq 0){$TotalHistoryCount = 1}
     $UpdateHistory = $UpdateSearcher.QueryHistory(0,$TotalHistoryCount)
 
     $Criteria = "IsHidden=0 and IsInstalled=0 and IsAssigned=1"
