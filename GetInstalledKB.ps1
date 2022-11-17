@@ -19,11 +19,9 @@ $InstalledUpdates = {
         Add-content $Logfile -value $logEntry
     }
 
-    $testnet = Test-NetConnection -ComputerName www.catalog.update.microsoft.com -CommonTCPPort HTTP
-    if($testnet.TcpTestSucceeded -eq "True"){}Else{return "No Connection"}
-
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
+    $UpdateSearcher.Online = $false
 
     $Criteria = "IsHidden=0 and IsInstalled=1"
 
