@@ -19,11 +19,9 @@ $FailedUpdates = {
         Add-content $Logfile -value $logEntry
     }
 
-    $testnet = Test-NetConnection -ComputerName www.catalog.update.microsoft.com -CommonTCPPort HTTP
-    if($testnet.TcpTestSucceeded -eq "True"){}Else{return "No Connection"}
-
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
+    $updateSearcher.Online = $false
     $TotalHistoryCount = $UpdateSearcher.GetTotalHistoryCount()
     if($TotalHistoryCount -eq 0){$TotalHistoryCount = 1}
     $UpdateHistory = $UpdateSearcher.QueryHistory(0,$TotalHistoryCount)
