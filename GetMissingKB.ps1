@@ -24,6 +24,7 @@ $MissingUpdates = {
 
     $Session = [activator]::CreateInstance([type]::GetTypeFromProgID("Microsoft.Update.Session"))#,$Computer))
     $UpdateSearcher = $Session.CreateUpdateSearcher()
+    $updateSearcher.Online = $false
 
     $Criteria = "IsHidden=0 and IsInstalled=0 and IsAssigned=1"
 
