@@ -1,1 +1,0 @@
-return $(New-Object -ComObject Microsoft.Update.AutoUpdate).Results.LastSearchSuccessDate
